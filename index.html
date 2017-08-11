@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>门禁系统</title>
+  <script>
+    const vpMeta = document.createElement('meta');
+    const meta = document.querySelector('meta[name="viewport"]');
+    if(meta){
+      meta.setAttribute('content', 'initial-scale=' + 1 / window.devicePixelRatio + ',user-scalable=no');
+    }else {
+      vpMeta.setAttribute('name', 'viewport');
+      vpMeta.setAttribute('content', 'initial-scale=' + 1 / window.devicePixelRatio + ',user-scalable=no');
+      document.documentElement.firstElementChild.appendChild(vpMeta);
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+</html>

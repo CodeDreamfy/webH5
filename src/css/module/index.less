@@ -1,0 +1,54 @@
+.index {
+  position: relative; height: 100%;
+  display: flex; justify-content: center;
+  align-items: center;
+  .lock-status-wrap {
+    position: absolute;
+    top: 50px; right: 50px;
+    font-size: 30px; height: 32px;
+    color: #666;
+    &.on {
+      color: #3fd0f4;
+      &:before {
+        background: #00d3f8;
+      }
+    }
+    &:before {
+      content: ''; width: 16px; height: 16px;
+      display: inline-block; margin-right: 22px;
+      background: #bdbdbd; border-radius: 50%;
+    }
+  }
+  // 锁按钮
+  .lock-btn-wrap {
+    flex: 0 0 412px; height: 412px;
+    background: linear-gradient(200deg,#00c7fc,#00d699);
+    border-radius: 50%; position: relative;
+    transition: all .8s;
+    &:after {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 440px; height: 440px; transform: translate3d(-50%, -50%, 0);
+      background: rgba(23,203,197,0.2); border-radius: 50%;
+    }
+    .icon {
+      position: absolute; top: 0; left: 0;
+      width: 412px; height: 412px;
+      background: url(../../assets/img/lock-close.png) center center no-repeat;
+    }
+    &.lockout {
+      .icon {
+        background: url(../../assets/img/lock-open.png) center center no-repeat;
+      }
+    }
+    &.animate {
+      &:after {
+        animation: bodong 1.4s infinite;
+      }
+    }
+    @keyframes bodong {
+      0%, 100% { width: 440px; height: 440px;}
+      50% { width: 464px; height: 464px; }
+    }
+  }
+
+}
