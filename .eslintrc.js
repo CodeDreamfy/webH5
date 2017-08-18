@@ -12,7 +12,8 @@ module.exports = {
     es6: true
   },
   globals: {
-    "window": true
+    "window": true,
+    "OJS": true
   },
   extends: 'airbnb-base',
   // required to lint *.vue files

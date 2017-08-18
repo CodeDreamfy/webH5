@@ -19,12 +19,22 @@ const routes = [
 ];
 
 
-function configRouters() {
+function configRouters(store) {
   const router = new Router({
     routes,
   });
   router.beforeEach((to, from, next) => {
     // to and from are Route Object,next() must be called to resolve the hook
+    OJS.bindAppReady(() => {
+      OJS.bindReady(() => {
+        store.dispatch('bindReady');
+        OJS.device.bindPushData({
+          deviceStatusChange(data) {
+            store.dispatch('deviceChangeData', data);
+          },
+        });
+      });
+    });
     next();
   });
   return router;
