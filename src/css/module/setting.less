@@ -1,10 +1,55 @@
 .setting {
-  display: flex; justify-content: space-around; align-items: center;
-  height: 100%;
-  .bindtoItem {
-    width: 240px; height: 240px;
-    border-radius: 10px; background: #ddd;
-    font-size: 30px; color: #000;
-    display: flex; justify-content: center; align-items: center;
+  padding: 0 40px;
+  background: #fff;
+  .label-wrap {
+    border-bottom: 1px solid #eee;
+    .title {
+      height: 100px; font-size: 30px; color: #333;
+      display: flex; justify-content: space-between;
+      align-items: center;
+      i {
+        width: 22px; height: 22px;
+        background: url(../../assets/img/left-jian.png) no-repeat;
+        background-size: 22px 22px;
+        transition: all .4s;
+        transform-origin: left center;
+      }
+      &.active {
+        i {
+          transform: rotate(90deg);
+        }
+      }
+    }
+    .modify-wrap {
+      border-top: 1px solid #ddd;
+      padding: 0 36px;
+      .input-item {
+        border-bottom: 1px solid #eee;
+        &:last-of-type {
+          border-bottom: none;
+        }
+        display: flex; align-items: center; height: 100px;
+        font-size: 30px;
+        &>span { flex: 0 0 120px;}
+        input { margin-left: 30px; padding-left: 12px;}
+
+      }
+      .bindPassBtn, .keywordPassBtn {
+        width: 80%; height: 88px; line-height: 88px;
+        margin:10px auto; display: block;
+        border-radius: 60px; text-align: center;
+        font-size: 30px; color: #fff;
+        background: #46cffa;
+        &:active {
+          background: #46cfcf;
+        }
+      }
+    }
   }
+}
+.pwdfade-enter-active, .pwdfade-leave-active {
+  transition: opacity .4s
+}
+.pwdfade-enter, .pwdfade-leave-to /* .fade-leave-active 在低于版本 2.1.8 中 */ {
+  opacity: 0
 }
