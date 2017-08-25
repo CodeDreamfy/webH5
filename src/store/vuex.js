@@ -5,7 +5,7 @@ Vue.use(Vuex);
 /* eslint-disable */
 const store = new Vuex.Store({
   state: {
-    lockStatus: null,
+    lockStatus: 1,
     onlineStatue: false
   },
   mutations: {
@@ -30,35 +30,34 @@ const store = new Vuex.Store({
         OJS.app.toast("设备不在线，无法更改状态");
         return false;
       }
-      // 后期需要删除掉主动设置状态
-      if(state.lockStatus) {
-        state.lockStatus = 0;
+      OJS.device.sendNotify({
+        cmd: 8,
+        content: "查询开锁状态"
+      });
+
+    },
+    changeLockState({state, commit, dispatch}) {
+      commit('getOnlineStatus');
+      if(!state.onlineStatue){
+        OJS.app.toast("设备不在线，无法更改状态");
+        return false;
+      }
+      if(!state.lockStatus){
+        OJS.app.toast("锁已经是打开的状态");
+        return false;
       }else {
         OJS.device.sendNotify({
-          cmd: 8,
-          content: "查询开锁状态"
+          cmd: 1,
+          content: String(OJS.userId)
         });
       }
 
     },
-    changeLockState({state, commit, dispatch}, status) {
-      commit('getOnlineStatus');
-      if(!state.onlineStatue){
-        // OJS.app.toast("设备不在线，无法更改状态");
-        return false;
-      }
-      OJS.device.sendNotify({
-        cmd: 1,
-        content: String(OJS.userId)
-      });
-    },
     deviceChangeData({state,getters,commit}, data) {
-      console.info("设备上报", data)
-      if(data.cmd == 3) {
-        console.info("设备响应上报：查询的密码为:",data.content);
+      if(!data.sta){
+        OJS.app.toast("开锁成功!")
       }
       switch(data.cmd){
-        case 1: state.lockStatus = 1; break;
         case 2: commit('infoSucc', "修改键盘成功");break;
         case 3: commit('infoSucc', '键盘密码:'+data.content);break;
         case 4: commit('infoSucc', '修改绑定密码成功');break;
@@ -68,8 +67,13 @@ const store = new Vuex.Store({
         case 8: commit('getLockStatus');break;
         default: break;
       }
+      if(data.Uid){
+        state.lockStatus = Number(data.sta);
+        console.log("传感器数据", data)
+      }
+
     },
-    modifyPwd({state,getters,commit}, {t, pwd}) {
+    modifyPwd({state,getters,commit}, {t, pwd, cb}) {
       if(!state.onlineStatue){
         //OJS.app.toast("设备不在线，无法更改状态");
         return false;
@@ -77,11 +81,12 @@ const store = new Vuex.Store({
       OJS.device.sendNotify({
         cmd: t,
         content: String(pwd)
+      },()=>{}, ()=>{
+        cb()
       })
     },
   },
   getters: {
-
   },
 });
 

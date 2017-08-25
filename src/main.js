@@ -4,15 +4,13 @@ import Vue from 'vue';
 import App from './App';
 import store from './store/vuex';
 import router from './router';
+import utils from './utils';
 
 
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
-Vue.mixin({
-  methods: {},
-});
-
+Vue.use(utils);
 new Vue({
   store,
   router: router(store),

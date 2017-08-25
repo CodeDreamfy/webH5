@@ -63,10 +63,10 @@
           this.$store.dispatch('modifyPwd', {
             t: type,
             pwd: this[pwd][0],
+            cb: (function () {
+              this.$router.push({ name: '/' });
+            }).bind(this),
           });
-        } else {
-          OJS.app.toast('长度必须在6-12位之间');
-          return false;
         }
         return true;
       },

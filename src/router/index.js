@@ -33,7 +33,7 @@ function configRouters(store) {
     OJS.bindAppReady(() => {
       OJS.bindReady(() => {
         store.commit('getOnlineStatus');
-        store.dispatch('inQuire');
+        // store.dispatch('inQuire');
         OJS.device.bindPushData({
           deviceStatusChange(data) {
             store.dispatch('deviceChangeData', data);

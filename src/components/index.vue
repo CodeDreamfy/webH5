@@ -1,10 +1,10 @@
 <template>
   <div class="index">
-    <div :class="['lock-status-wrap',{'on':lockstatus}]">{{lockstatus? '门已开': '门已锁'}}</div>
-    <a class="lock-btn-wrap" :class="[{'offline': !online},{'lockout':lockstatus}]" @touchstart="tstartstyle" @touchend="tendstyle">
+    <div :class="['lock-status-wrap',{'on':!lockstatus}]">{{lockstatus? '门已锁': '门已开'}}</div>
+    <a class="lock-btn-wrap" :class="[{'offline': !online},{'lockout':!lockstatus}]" @touchstart="tstartstyle" @touchend="tendstyle">
       <i class="icon"></i>
       <input type="button" class="lock-input" :disabled="!online" @click="handlerUnlock">
-      <span class="tips" :class="{'hide': !lockstatus}">锁将在{{timeSecMsg}}s后自动锁定</span>
+      <span class="tips" v-if="false">锁将在{{timeSecMsg}}s后自动锁定</span>
     </a>
   </div>
 </template>
@@ -30,16 +30,12 @@ export default {
     }),
   },
   methods: {
-    handlerUnlock() { // eslint-disable-next-line
-      if(this.lockstatus) {
-        OJS.app.toast('设备未锁');
-      } else {
-        this.$store.dispatch('changeLockState', 1);
-      }
+    handlerUnlock() {
+      this.$store.dispatch('changeLockState');
     },
     handlerCountdown() {
       const that = this;
-      if (!this.timeSecStatus) {
+      if (!this.timeSecStatus && !this.lockstatus) {
         const clean = setInterval(() => {
           if (that.timeSecMsg > 1) {
             that.timeSecMsg -= 1;
@@ -58,19 +54,11 @@ export default {
     },
     tstartstyle() {
       const elem = document.querySelector('.lock-btn-wrap i');
-      elem.className += ' active';
+      elem.className = 'icon active';
     },
     tendstyle() {
       const elem = document.querySelector('.lock-btn-wrap i');
       elem.className = 'icon';
-    },
-  },
-  watch: {
-    lockstatus() { // eslint-disable-next-line
-      console.log("状态改变", this.lockstatus, this.timeSecStatus, this.timeSecMsg);
-      if (this.lockstatus && !this.timeSecStatus) {
-        this.handlerCountdown();
-      }
     },
   },
 };

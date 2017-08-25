@@ -51,10 +51,25 @@
         100% { opacity: 0.2;}
       }
     }
+    .tips {
+      position: absolute; top: 300px; left: 0;
+      width:100%; text-align: center;
+      font-size: 30px; color: #fff;
+      z-index: 4; animation: shink 1s infinite;
+      @keyframes shink {
+        0% { opacity: 1;}
+        100% { opacity: 0.2;}
+      }
+    }
     &.lockout {
       .icon {
         background: url(../../assets/img/lock-open.png) center center no-repeat;
         background-size: 120px 170px;
+      }
+    }
+    &.offline {
+      &::after {
+        background: #ddd;
       }
     }
     &.offline {
