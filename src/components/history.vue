@@ -9,7 +9,7 @@ export default {
   data() {
   },
   mounted() {
-    console.log(this.getToken());
+    // console.log(this.getToken());
   },
 };
 </script>

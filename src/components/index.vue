@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <div :class="['lock-status-wrap',{'on':!lockstatus}]">{{lockstatus? '门已锁': '门已开'}}</div>
+    <div :class="['lock-status-wrap',{'on':!lockstatus}, {'offline': online}]">{{lockstatus? '门已锁': '门已开'}}</div>
     <a class="lock-btn-wrap" :class="[{'offline': !online},{'lockout':!lockstatus}]" @touchstart="tstartstyle" @touchend="tendstyle">
       <i class="icon"></i>
       <input type="button" class="lock-input" :disabled="!online" @click="handlerUnlock">

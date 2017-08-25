@@ -37,25 +37,20 @@ const store = new Vuex.Store({
 
     },
     changeLockState({state, commit, dispatch}) {
-      commit('getOnlineStatus');
       if(!state.onlineStatue){
         OJS.app.toast("设备不在线，无法更改状态");
         return false;
       }
-      if(!state.lockStatus){
-        OJS.app.toast("锁已经是打开的状态");
-        return false;
-      }else {
-        OJS.device.sendNotify({
-          cmd: 1,
-          content: String(OJS.userId)
-        });
-      }
+
+      OJS.device.sendNotify({
+        cmd: 1,
+        content: String(OJS.userId)
+      });
 
     },
     deviceChangeData({state,getters,commit}, data) {
       if(!data.sta){
-        OJS.app.toast("开锁成功!")
+        // OJS.app.toast("开锁成功!")
       }
       switch(data.cmd){
         case 2: commit('infoSucc', "修改键盘成功");break;
