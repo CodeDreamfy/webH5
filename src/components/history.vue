@@ -24,9 +24,26 @@ export default {
 
     };
   },
+  methods: {
+    insertDom(data) {
+      const docFragment = document.createDocumentFragment();
+      const elemDivWrap = document.createElement('<div class="datalist"><ul></ul></div>');
+      const ul = elemDivWrap.querySelector('ul');
+      for (let i = 0; i < data.length; i++) {
+        const date = new Date(data[i].at);
+        const li = document.createElement(`
+        <li>用户ID:${data[i].Uid}在${date.getHours()}:${date.getMinutes()}</li>`);
+        ul.insertAdjacentElement(li);
+      }
+    },
+  },
   mounted() { // eslint-disable-next-line
     const that = this;
-    // const sensorPromise = {};
+    const sensorPromise = {};
+    let senData;
+    sensorPromise.then((res) => {
+      senData = this.getDataFormat(res);
+    });
   },
 };
 </script>
