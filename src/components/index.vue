@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <div :class="['lock-status-wrap',{'on':!lockstatus}, {'offline': online}]">{{lockstatus? '门已锁': '门已开'}}</div>
+    <div :class="['lock-status-wrap',{'on':!lockstatus}, {'offline': !online}]">{{lockstatus? '门已锁': '门已开'}}</div>
     <a class="lock-btn-wrap" :class="[{'offline': !online},{'lockout':!lockstatus}]" @touchstart="tstartstyle" @touchend="tendstyle">
       <i class="icon"></i>
       <input type="button" class="lock-input" :disabled="!online" @click="handlerUnlock">
@@ -33,25 +33,6 @@ export default {
     handlerUnlock() {
       this.$store.dispatch('changeLockState');
     },
-    handlerCountdown() {
-      const that = this;
-      if (!this.timeSecStatus && !this.lockstatus) {
-        const clean = setInterval(() => {
-          if (that.timeSecMsg > 1) {
-            that.timeSecMsg -= 1;
-            this.timeSecStatus = true;
-          } else {
-            that.timeSecMsg = 5;
-            this.timeSecStatus = null;
-            that.$store.dispatch('inQuire');
-            clearInterval(clean);
-          }
-        }, 1000);
-      } else {
-        return false;
-      }
-      return true;
-    },
     tstartstyle() {
       const elem = document.querySelector('.lock-btn-wrap i');
       elem.className = 'icon active';
@@ -60,6 +41,9 @@ export default {
       const elem = document.querySelector('.lock-btn-wrap i');
       elem.className = 'icon';
     },
+  },
+  mounted() {
+
   },
 };
 </script>

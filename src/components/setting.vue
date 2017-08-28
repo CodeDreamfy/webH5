@@ -62,10 +62,10 @@
         if (this.validator(pwd)) {
           this.$store.dispatch('modifyPwd', {
             t: type,
-            pwd: this[pwd][0],
+            pwd: this[pwd][0], // eslint-disable-next-line
             cb: (function () {
               this.$router.push({ name: '/' });
-            }).bind(this),
+            }).call(this),
           });
         }
         return true;
