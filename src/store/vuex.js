@@ -73,6 +73,7 @@ const store = new Vuex.Store({
         //OJS.app.toast("设备不在线，无法更改状态");
         return false;
       }
+      console.log("执行了几次");
       OJS.device.sendNotify({
         cmd: t,
         content: String(pwd)

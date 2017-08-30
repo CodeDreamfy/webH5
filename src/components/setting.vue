@@ -15,7 +15,7 @@
             <span>确认密码</span>
             <input type="password" min="12" max=12 max-length=12 placeholder="请再次输入新密码" v-model="bindPwd[1]" id="re-bind-pwd">
           </label>
-          <a href="javascript:;" class="bindPassBtn" @touchend.self="handlerPwd(4, 'bindPwd')">确认</a>
+          <a href="javascript:;" class="bindPassBtn" @touchend.stop.prevent.self="handlerPwd(4, 'bindPwd')">确认</a>
         </div>
       </transition>
     </div>
@@ -34,7 +34,7 @@
             <span>确认密码</span>
             <input type="password" min="12" max=12 max-length=12 placeholder="请再次输入新密码" v-model="keywordPwd[1]" id="re-keyword-pwd">
           </label>
-          <a href="javascript:;" class="keywordPassBtn"   @touchend.self="handlerPwd(2, 'keywordPwd')">确认</a>
+          <a href="javascript:;" class="keywordPassBtn"   @touchend.stop.prevent.self="handlerPwd(2, 'keywordPwd')">确认</a>
         </div>
       </transition>
     </div>
@@ -58,19 +58,23 @@
       toggleHandler(type) {
         this.toggleVisable[type] ? this.toggleVisable[type] = false : this.toggleVisable[type] = true; 	// eslint-disable-line
       },
-      handlerPwd(type, pwd) {
-        if (this.validator(pwd)) {
+      handlerPwd(type, pwdType) {
+        if (this.validator(pwdType)) {
           this.$store.dispatch('modifyPwd', {
             t: type,
-            pwd: this[pwd][0], // eslint-disable-next-line
+            pwd: this[pwdType] && this[pwdType][0], // eslint-disable-next-line
             cb: (function () {
-              this.$router.push({ name: '/' });
-            }).call(this),
+              this.$router.push({ name: 'index' });
+            }).bind(this),
           });
         }
         return true;
       },
       validator(type) {
+        if (this[type].length === 0) {
+          OJS.app.toast('长度必须在6-12位之间');
+          return false;
+        }
         if (this[type][0].length > 12 || this[type][0].length < 6) {
           OJS.app.toast('长度必须在6-12位之间');
           return false;

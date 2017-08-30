@@ -31,12 +31,14 @@ export default {
       elemDivWrap.className = 'datalist';
       elemDivWrap.innerHTML = '<ul></ul>';
       const ul = elemDivWrap.querySelector('ul');
-      console.log('insertData', data);
+      const newtime = new Date(data[data.length - 1].at);
+      ul.innerHTML = `<p class="title">${newtime.getFullYear()}年${newtime.getMonth() + 1}月${newtime.getDate()}日</p>`;
       if (data.length === 0) {
         const li = document.createElement(`
         <li>暂无数据</li>`);
         ul.appendChild(li);
       } else {
+        // console.log('传递数据', data);
         for (let i = 0; i < data.length; i += 1) {
           const date = new Date(data[i].at);
           const li = document.createElement('li');
@@ -60,12 +62,20 @@ export default {
     const sensorPromise = this.getSensordata();
     sensorPromise.then((res) => {
       this.clearDom();
-      const ms = new Promise((resolve) => {
-        const da = this.getDataFormat(res.data.data);
-        resolve(da);
-      });
-      ms.then((data) => {
-        this.insertDom(data);
+      let sessionData = [];
+      sessionData = sessionData.concat(res.data.data.items);
+      const senAll = this.getAllSensor(res.data.data);
+      senAll.then((data) => {
+        for (let i = 0; i < data.length; i += 1) {
+          sessionData = sessionData.concat(data[i].data.data.items);
+        }
+        const ms = new Promise((resolve) => {
+          const da = this.getDataFormat(sessionData);
+          resolve(da);
+        });
+        ms.then((session) => {
+          this.insertDom(session);
+        });
       });
     });
   },

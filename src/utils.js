@@ -11,7 +11,7 @@ utils.install = () => {
         const oToken = (localStorage.getItem('otoken') && JSON.parse(localStorage.getItem('otoken'))) || null;
         let ntime = +new Date();
         return new Promise((resolve, reject) => {
-          if (oToken && ntime < oToken.etime) {
+          if (oToken && Number(oToken.etime) > ntime) {
             resolve(oToken.token);
           } else {
             that.$axios({
@@ -20,10 +20,10 @@ utils.install = () => {
               data: {},
             })
             .then((res) => {  // eslint-disable-next-line
-              ntime = +new Date();
+              ntime = +new Date() + 1000000;
               localStorage.setItem('otoken', JSON.stringify({
                 token: res.data.data.token,
-                etime: ntime + 2333000,
+                etime: ntime,
               }));
               resolve(res.data.data.token);
             })
@@ -43,10 +43,10 @@ utils.install = () => {
             if (!argument) { argument = {}; }
             oArg = Object.assign({
               token: res,
-              stime: new Date().toISOString(),
-              etime: new Date(+new Date() + (24 * 3600000)).toISOString(),
+              stime: new Date(+new Date() - (24 * 3600000)).toISOString(),
+              etime: new Date().toISOString(),
               page: 1,
-              limit: 12,
+              limit: 20,
               proid: 92352,
             }, args);
             that.$axios({
@@ -65,28 +65,46 @@ utils.install = () => {
           });
         });
       },
+      getAllSensor(arg) {
+        const that = this;
+        const asyncPromise = [];
+        const pageLimit = Math.ceil(arg.total_count / 20);
+        for (let i = 2; i <= pageLimit; i += 1) {
+          const ms = that.getSensordata({
+            page: i,
+          });
+          asyncPromise.push(ms);
+        }
+        return Promise.all(asyncPromise);
+      },
       getDataFormat(data) {
-        if (data.items.length === 0) {
+        if (data.length === 0) {
           return [];
         }
         const datas = [];
-        for (let i = 0; i < data.items.length; i += 1) {
-          const d = data.items[i];
+        console.log('Format', data);
+        for (let i = 0; i < data.length; i += 1) {
+          const d = data[i];
           datas[i] = Object.assign({
             at: d.at,
           }, d.body);
         }
-        let firstdata = +new Date(datas[0].at);
+        // let firstdata = +new Date(datas[0].at);
+        const rData = [];
+        datas.reverse();
         datas.reduce((acc, curr, index) => {
+          if (index === 0) {
+            rData.push(curr);
+            return curr;
+          }
           const n = +new Date(curr.at);
-          if (n - firstdata < 6000) {
-            datas.splice(index, 1);
-          } else {
-            firstdata = new Date(curr.at);
+          const l = +new Date(acc.at);
+          if (Math.abs(l - n) > 3000) {
+            rData.push(curr);
           }
           return curr;
-        });
-        return datas;
+        }, 1);
+        return rData;
       },
     },
   });
