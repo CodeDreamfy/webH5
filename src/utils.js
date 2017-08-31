@@ -9,21 +9,20 @@ utils.install = () => {
       getToken() {
         const that = this;
         const oToken = (localStorage.getItem('otoken') && JSON.parse(localStorage.getItem('otoken'))) || null;
-        let ntime = +new Date();
         return new Promise((resolve, reject) => {
-          if (oToken && Number(oToken.etime) > ntime) {
+          if (oToken && (Number(oToken.etime) > +new Date())) {
             resolve(oToken.token);
           } else {
+            localStorage.removeItem('oToken');
             that.$axios({
               method: 'get',
               url: '//api.heclouds.com/pp/token?user_id=23709&secret=y937q50ElKG8lwfkazA7OOwaRu9Up0YB',
               data: {},
             })
             .then((res) => {  // eslint-disable-next-line
-              ntime = +new Date() + 1000000;
               localStorage.setItem('otoken', JSON.stringify({
                 token: res.data.data.token,
-                etime: ntime,
+                etime: +new Date() + (res.data.data.timeout * 1000),
               }));
               resolve(res.data.data.token);
             })
